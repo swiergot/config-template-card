@@ -253,6 +253,11 @@ export class ConfigTemplateCard extends LitElement {
       varDef = varDef + `var ${varName} = vars['${varName}'];\n`;
     }
 
-    return eval(varDef + template.substring(2, template.length - 1));
+    template.match(/\${[^}]+}/)!.forEach(m => {
+      const repl = eval(varDef + m.substring(2, m.length - 1));
+      template = template.replace(m, repl);
+    });
+
+    return template;
   }
 }
